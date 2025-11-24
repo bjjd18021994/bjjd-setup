@@ -1,0 +1,13 @@
+controller:
+  image: "docker.io/jenkins/jenkins:lts-jdk21"
+  imagePullPolicy: Always
+  adminUser: admin
+  adminPassword: admin123
+
+persistence:
+  enabled: true
+  size: 20Gi
+
+service:
+  type: ClusterIP
+  port: 8080
