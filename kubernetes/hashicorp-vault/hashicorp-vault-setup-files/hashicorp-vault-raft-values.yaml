@@ -1,11 +1,11 @@
 server:
   resources:
     requests:
-      memory: 4Gi
-      cpu: 1000m
+      memory: "512Mi"
+      cpu: "500m"
     limits:
-      memory: 8Gi
-      cpu: 1000m
+      memory: "1Gi"
+      cpu: "1000m"
   affinity: ""
   readinessProbe:
     enabled: true
@@ -16,7 +16,7 @@ server:
     storageClass: "hostpath"
   ha:
     enabled: true
-    replicas: 3
+    replicas: 1
     raft:
       enabled: true
       setNodeId: true

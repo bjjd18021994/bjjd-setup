@@ -73,7 +73,7 @@ kubectl apply -f hostpath-storageclass.yaml
 
 ## ✅ Step 2 — Create the PersistentVolume (Static HostPath Storage)
 
-Create the file: **vault-raft-pv.yaml**
+Create the file: **hashicorp-vault-raft-pv.yaml**
 
 ```yaml
 apiVersion: v1
@@ -97,14 +97,14 @@ This directory permanently stores all Vault Raft data.
 Apply the PV:
 
 ```sh
-kubectl apply -f vault-raft-pv.yaml
+kubectl apply -f hashicorp-vault-raft-pv.yaml
 ```
 
 ---
 
 ## ✅ Step 3 — Vault Helm Values (Enable Raft)
 
-Create the file: **helm-vault-raft-values.yml**
+Create the file: **hashicorp-vault-raft-values.yaml**
 
 ```yaml
 server:
@@ -185,7 +185,7 @@ server:
 Install Vault:
 
 ```sh
-helm install vault hashicorp/vault --values helm-vault-raft-values.yml -n vault
+helm install vault hashicorp/vault --values hashicorp-vault-raft-values.yaml -n vault
 ```
 
 ---
@@ -364,7 +364,7 @@ NAMESPACE="vault"
 kubectl apply -f hostpath-storageclass.yaml
 
 # Step 2: PV
-kubectl apply -f vault-raft-pv.yaml
+kubectl apply -f hashicorp-vault-raft-pv.yaml
 
 # Step 3: Helm values already provided
 
