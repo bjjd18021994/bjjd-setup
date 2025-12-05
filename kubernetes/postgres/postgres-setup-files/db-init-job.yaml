@@ -1,0 +1,109 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgres-init-databases
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: init
+          image: bitnami/postgresql:latest
+          env:
+            - name: HOST
+              valueFrom:
+                  configMapKeyRef:
+                    name: postgres-config
+                    key: POSTGRES_HOST
+
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-db-secrets
+                  key: POSTGRES_SUPERUSER_PASSWORD
+
+            # microservice DB passwords
+            - name: KEYCLOAK_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-db-secrets
+                  key: KEYCLOAK_DB_PASSWORD
+
+            - name: USERS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-db-secrets
+                  key: USERS_DB_PASSWORD
+
+            - name: PERSONS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-db-secrets
+                  key: PERSONS_DB_PASSWORD
+
+            - name: ACCOUNTS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-db-secrets
+                  key: ACCOUNTS_DB_PASSWORD
+
+            - name: DARSHAN_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-db-secrets
+                  key: DARSHAN_DB_PASSWORD
+                  
+            - name: PROJECTS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-db-secrets
+                  key: PROJECTS_DB_PASSWORD
+
+          command: ["bash", "-c"]
+          args:
+            - |
+              set -e
+
+              echo "Waiting for PostgreSQL at $HOST:5432 ..."
+              until pg_isready -h "$HOST" -U postgres; do
+                echo "$HOST:5432 - no response"
+                sleep 2
+              done
+              echo "$HOST:5432 - accepting connections"
+
+              create_db_user() {
+                DB="$1"
+                USER="$2"
+                PASS="$3"
+
+                echo "Processing: DB=$DB USER=$USER"
+
+                # Create database if missing
+                if psql -h "$HOST" -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname='${DB}'" | grep -q "1"; then
+                  echo "Database ${DB} already exists"
+                else
+                  echo "Creating database ${DB}"
+                  psql -h "$HOST" -U postgres -c "CREATE DATABASE \"${DB}\";"
+                fi
+
+                # Create user if missing
+                if psql -h "$HOST" -U postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='${USER}'" | grep -q "1"; then
+                  echo "Role ${USER} already exists"
+                else
+                  echo "Creating role ${USER}"
+                  psql -h "$HOST" -U postgres -c "CREATE USER \"${USER}\" WITH PASSWORD '${PASS}';"
+                fi
+
+                echo "Granting privileges on ${DB} to ${USER}"
+                psql -h "$HOST" -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE \"${DB}\" TO \"${USER}\";"
+              }
+
+              create_db_user "keycloak_db" "keycloak" "$KEYCLOAK_DB_PASSWORD"
+              create_db_user "accounts_db" "accounts" "$ACCOUNTS_DB_PASSWORD"
+              create_db_user "darshan_db" "darshan" "$DARSHAN_DB_PASSWORD"
+              create_db_user "persons_db" "persons" "$PERSONS_DB_PASSWORD"
+              create_db_user "projects_db" "projects" "$PROJECTS_DB_PASSWORD"
+              create_db_user "users_db" "users" "$USERS_DB_PASSWORD"
+
+              echo "Database initialization complete."

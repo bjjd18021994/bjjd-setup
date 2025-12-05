@@ -17,7 +17,7 @@ Before starting, ensure the host directory for Vault data exists and is accessib
 ### **1️⃣ Create the target folder on Windows (if not already created)**
 
 ```sh
-mkdir C:\k8s-data\jenkins
+mkdir C:\k8s-data\vault
 ```
 
 Or if using vault directory:
@@ -46,7 +46,15 @@ Docker Desktop runtime maps it internally to:
 ```
 /tmp/docker-desktop-root/run/desktop/mnt/host/c/k8s-data/vault
 ```
+### **3️⃣ Give access to the k8s folder and its subfolder inside docker-desktop otherwise you may get the error of permission denied on vault.db**
 
+HostPath to use in PV:
+
+```
+PS C:\Users\Rajiv Kumar Bansal>  wsl -d docker-desktop
+cd /tmp/docker-desktop-root/run/desktop/mnt/host/c
+chmod -R 777 k8s-data
+```
 ---
 
 
@@ -67,6 +75,10 @@ Apply it:
 
 ```sh
 kubectl apply -f hostpath-storageclass.yaml
+```
+- **NOTE: Please delete the storageclass if any issue comes during storage class creation and again retry**
+```sh
+kubectl delete sc hostpath
 ```
 
 ---

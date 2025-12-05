@@ -1,0 +1,45 @@
+replicaCount: 1
+
+image:
+  repository: quay.io/keycloak/keycloak
+  tag: "26.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false   # set true if you want ingress
+  className: ""
+  host: keycloak.example.com
+  path: /
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 2000Mi
+  requests:
+    cpu: 500m
+    memory: 1700Mi
+
+postgres:
+  host: "bjjd-postgres-postgresql.default.svc.cluster.local"
+  port: 5432
+  dbName: "keycloak_db"
+  username: "keycloak"
+  password: "keycloak@9379"
+
+admin:
+  username: "admin"
+  password: "admin123"
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 5Gi
+  storageClass: "hostpath"   # your existing storageClass
+ # existingClaim: ""
+ # hostPath: /run/desktop/mnt/host/c/k8s-data/keycloak
+
+

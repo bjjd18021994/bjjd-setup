@@ -1,14 +1,7 @@
 server:
-  resources:
-    requests:
-      memory: "512Mi"
-      cpu: "500m"
-    limits:
-      memory: "1Gi"
-      cpu: "1000m"
   affinity: ""
   readinessProbe:
-    enabled: true
+    enabled: false
     path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
   dataStorage:
     enabled: true

@@ -1,0 +1,17 @@
+auth:
+  postgresPassword: "bjjd_9379"
+
+primary:
+  persistence:
+    enabled: true
+    existingClaim: pg-pvc
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+
+volumePermissions:
+  enabled: true
+
+image:
+  debug: true
