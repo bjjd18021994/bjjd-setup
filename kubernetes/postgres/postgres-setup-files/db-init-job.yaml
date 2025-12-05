@@ -94,9 +94,24 @@ spec:
                   echo "Creating role ${USER}"
                   psql -h "$HOST" -U postgres -c "CREATE USER \"${USER}\" WITH PASSWORD '${PASS}';"
                 fi
+                
+                echo "Granting ownership + full permissions…"
 
-                echo "Granting privileges on ${DB} to ${USER}"
+                # For DB-level operations
+                
+                echo "Make Keycloak the owner of the entire database"
+                psql -h "$HOST" -U postgres -c "ALTER DATABASE \"${DB}\" OWNER TO \"${USER}\";"
+
+                echo "Ensure the public schema is owned by Keycloak"
+                psql -h "$HOST" -U postgres -c "ALTER SCHEMA public OWNER TO \"${USER}\";"
+
+                echo "Grant full privileges (safety for future objects)"
                 psql -h "$HOST" -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE \"${DB}\" TO \"${USER}\";"
+                psql -h "$HOST" -U postgres -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"${USER}\";"
+                psql -h "$HOST" -U postgres -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"${USER}\";"
+                psql -h "$HOST" -U postgres -c "GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO \"${USER}\";"
+                psql -h "$HOST" -U postgres -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO \"${USER}\";"
+                psql -h "$HOST" -U postgres -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON SEQUENCES TO \"${USER}\";"
               }
 
               create_db_user "keycloak_db" "keycloak" "$KEYCLOAK_DB_PASSWORD"
