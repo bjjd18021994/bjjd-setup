@@ -56,153 +56,53 @@ cd /tmp/docker-desktop-root/run/desktop/mnt/host/c
 chmod -R 777 k8s-data
 ```
 ---
+📂 Repository Structure
 
-
-## ✅ Step 1 — Create the StorageClass
-
-Create the file: **hostpath-storageclass.yaml**
-
-```yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: hostpath
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
+Your project folder should look like this:
 ```
+hashicorp-vault
+├── install-vault-raft.sh
+├── install-vault-raft.ps1
+└── hashicorp-vault-setup-files/
+    ├── hostpath-storageclass.yaml
+    ├── hashicorp-vault-raft-pv.yaml
+    ├── hashicorp-vault-raft-values.yaml
 
-Apply it:
-
-```sh
-kubectl apply -f hostpath-storageclass.yaml
 ```
-- **NOTE: Please delete the storageclass if any issue comes during storage class creation and again retry**
-```sh
-kubectl delete sc hostpath
+## ✅ Step 1 — HashiCorp Installation Script
+- Powershell Script
+```bash
+cd hashicorp
+powershell -ExecutionPolicy Bypass -File install-vault-raft.ps1
 ```
+- Shell Script
 
+```bash
+chmod +x install-vault-raft.sh
+./install-vault-raft.sh
+```
+📌 **Short Summary of the Script**
+
+The script install-vault-raft.sh fully automates:
+
+1. Safe Rollback
+- It removes any Vault installation artifacts:
+- Deletes existing Vault Helm release
+- Deletes StorageClass (hostpath)
+- Deletes PVC (data-vault-0)
+- Deletes PV (hashicorp-vault-raft-pv)
+
+All deletion errors are ignored safely, so the script never fails during rollback.
+
+2. Fresh Install
+The script then:
+- Applies the StorageClass YAML
+- Applies the PersistentVolume YAML
+- Adds & updates the HashiCorp Helm repository
+- Installs Vault using a Raft-enabled values file
 ---
 
-## ✅ Step 2 — Create the PersistentVolume (Static HostPath Storage)
-
-Create the file: **hashicorp-vault-raft-pv.yaml**
-
-```yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: vault-raft-pv
-spec:
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: hostpath
-  hostPath:
-    path: /run/desktop/mnt/host/c/k8s-data/vault
-  persistentVolumeReclaimPolicy: Retain
-```
-
-➡ **Adjust the path** if needed for your OS.
-This directory permanently stores all Vault Raft data.
-
-Apply the PV:
-
-```sh
-kubectl apply -f hashicorp-vault-raft-pv.yaml
-```
-
----
-
-## ✅ Step 3 — Vault Helm Values (Enable Raft)
-
-Create the file: **hashicorp-vault-raft-values.yaml**
-
-```yaml
-server:
-  resources:
-    requests:
-      memory: 4Gi
-      cpu: 1000m
-    limits:
-      memory: 8Gi
-      cpu: 1000m
-  affinity: ""
-  readinessProbe:
-    enabled: true
-    path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
-  dataStorage:
-    enabled: true
-    size: 10Gi
-    storageClass: "hostpath"
-  ha:
-    enabled: true
-    replicas: 3
-    raft:
-      enabled: true
-      setNodeId: true
-      config: |
-        ui = true
-
-        listener "tcp" {
-          tls_disable = true
-          address = "[::]:8200"
-          cluster_address = "[::]:8201"
-        }
-
-        storage "raft" {
-          path = "/vault/data"
-        }
-```
-
----
-
-## ✅ Step 4 — Add Helm Repo & Install Vault
-
-Add the HashiCorp Helm repository:
-
-```sh
-helm repo add hashicorp https://helm.releases.hashicorp.com
-```
-
-Update all repositories:
-
-```sh
-helm repo update
-```
-
-Verify Vault chart is available:
-
-```sh
-helm search repo hashicorp/vault
-```
-
-Edit or confirm your values file:
-
-```sh
-sudo vi helm-vault-raft-values.yml
-```
-
-Minimal Raft-enabled Helm values example:
-
-```yaml
-server:
-  affinity: ""
-  ha:
-    enabled: true
-    raft:
-      enabled: true
-```
-
-Install Vault:
-
-```sh
-helm install vault hashicorp/vault --values hashicorp-vault-raft-values.yaml -n vault
-```
-
----
-
-## 🧪 Step 5 — Check the PVC (expected to be Pending)
+## ✅ Step 2 — Check the PVC (expected to be Pending)
 
 ```sh
 kubectl get pvc -n vault
@@ -218,7 +118,7 @@ This is **normal** — the PVC will bind once Vault initializes.
 
 ---
 
-## 🧪 Step 6 — Verify Vault Pod
+## ✅ Step 3 — Verify Vault Pod
 
 Check the Vault pod:
 
@@ -234,7 +134,7 @@ kubectl logs vault-0 -n vault
 
 ---
 
-# ⭐ Final Result
+## ✅ Final Result
 
 You now have:
 
@@ -247,7 +147,7 @@ Vault is now fully operational with stable, persistent Raft backend storage.
 
 ---
 
-## 🧩 Step 7 — Initialize, Unseal, and Join Raft Cluster Nodes
+## ✅ Step 4 — Initialize Vault, Unseal, and Join Raft Cluster Nodes
 
 ### **Initialize vault-0 with one key share and threshold**
 
@@ -265,7 +165,7 @@ kubectl exec vault-0 -n vault -- vault operator init -key-shares=1 -key-threshol
 Or:
 
 ```sh
-kubectl exec vault-0 -n vault -- vault operator init -key-shares=1 -key-threshold=1 -format=json
+kubectl exec vault-0 -- vault operator init -key-shares=1 -key-threshold=1 -format=json > cluster-keys.json
 ```
 
 ### **Save the output into cluster-keys.json**
@@ -334,7 +234,7 @@ Use the **root token** from *cluster-keys.json*.
 
 ---
 
-# 🖼️ Appendix A — Architecture Diagram (ASCII)
+## ✅ Appendix A — Architecture Diagram (ASCII)
 
 ```
               +-----------------------+
@@ -359,89 +259,6 @@ Use the **root token** from *cluster-keys.json*.
      All nodes store data in:
      /vault/data → hostPath PV → local disk
 ```
-
----
-
-# ⚙️ Appendix B — Automated Setup Script (Optional)
-
-Create a script named **deploy-vault-raft.sh**:
-
-```bash
-#!/bin/bash
-set -e
-
-NAMESPACE="vault"
-
-# Step 1: StorageClass
-kubectl apply -f hostpath-storageclass.yaml
-
-# Step 2: PV
-kubectl apply -f hashicorp-vault-raft-pv.yaml
-
-# Step 3: Helm values already provided
-
-# Step 4: Repo + Install
-helm repo add hashicorp https://helm.releases.hashicorp.com
-helm repo update
-helm install vault hashicorp/vault -n $NAMESPACE --create-namespace \
-  --values helm-vault-raft-values.yml
-
-# Wait for pod
-kubectl wait --for=condition=Ready pod/vault-0 -n $NAMESPACE --timeout=120s
-
-echo "Vault deployed. You may now initialize and unseal."
-```
-
-Make executable:
-
-```sh
-chmod +x deploy-vault-raft.sh
-```
-
-Run it:
-
-```sh
-./deploy-vault-raft.sh
-```
-
----
-
-# 🧹 Appendix C — Cleanup / Teardown
-
-If you want to completely remove the deployment and data:
-
-### **Delete Helm release:**
-
-```sh
-helm uninstall vault -n vault
-```
-
-### **Delete namespace:**
-
-```sh
-kubectl delete namespace vault
-```
-
-### **Delete PersistentVolume:**
-
-```sh
-kubectl delete pv vault-raft-pv
-```
-
-### **Delete data directory (irreversible!)**
-
-Make sure Vault is deleted before removing data.
-
-```sh
-sudo rm -rf /run/desktop/mnt/host/c/k8s-data/vault
-```
-
-### **Delete the StorageClass:**
-
-```sh
-kubectl delete -f hostpath-storageclass.yaml
-```
-
 ---
 
 
