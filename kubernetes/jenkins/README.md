@@ -43,6 +43,14 @@ Use the following mount path inside the Kubernetes PersistentVolume configuratio
   ```
   /tmp/docker-desktop-root/run/desktop/mnt/host/c/k8s-data/jenkins
   ```
+* Give access to the k8s folder and its subfolder inside docker-desktop otherwise you may get the error of permission denied: **/mnt/host/c/k8s-data/jenkins**
+
+```bash
+cd /tmp/docker-desktop-root/run/desktop/mnt/host/c
+chmod -R 777 k8s-data
+```
+
+(Adjust permissions to your security requirements — `777` is permissive but effective for local development.)
 
 ---
 

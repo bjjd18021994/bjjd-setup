@@ -63,7 +63,7 @@ if (helm list -n default | Select-String -Pattern "vault") {
 }
 
 # Delete StorageClass (ignore failure)
-kubectl delete sc hostpath 2>$null
+# kubectl delete sc hostpath 2>$null
 
 # Delete Vault PVC (ignore failure)
 kubectl delete pvc data-vault-0 2>$null
@@ -79,8 +79,16 @@ echo "=== Rollback complete. Starting fresh install ==="
 # APPLY STORAGECLASS + PV
 # -------------------------------
 
-echo "Applying StorageClass..."
-kubectl apply -f "hashicorp-vault-setup-files/hostpath-storageclass.yaml"
+# Check if StorageClass 'hostpath' exists
+$scExists = kubectl get storageclass | Select-String "^hostpath\s"
+
+if ($scExists) {
+    Write-Host "StorageClass 'hostpath' already exists. Skipping creation."
+} else {
+    Write-Host "StorageClass 'hostpath' not found. Creating..."
+    kubectl apply -f "hashicorp-vault-setup-files/hostpath-storageclass.yaml"
+}
+
 
 echo "Applying PersistentVolume..."
 kubectl apply -f "hashicorp-vault-setup-files/hashicorp-vault-raft-pv.yaml"
