@@ -1,8 +1,26 @@
-# BJJD Setup (Docker Desktop Kubernetes)
-- Hashicorp Vault (Single-Node Raft Setup)
-- Jenkins
-- Postgres
-- keycloak
+# 🚀 BJJD - Kubernetes Platform Setup -- Automated Installation Script
+
+This repository contains an automated setup script that installs the
+complete platform stack on a Kubernetes cluster using **Helm** and
+standard shell scripting.
+
+The script deploys the following components:
+
+-   **Jenkins** (CI/CD server -- Helm chart)
+-   **HashiCorp Vault (Raft mode)** (Secure secrets engine)
+-   **Postgres** (Database backend)
+-   **Keycloak** (Identity provider -- Helm chart)
+
+It ensures a **clean, repeatable, idempotent deployment** by checking
+existing releases and reinstalling components when needed.
+
+| Component             | Install Method        | Description                                                       |
+| --------------------- | --------------------- | ----------------------------------------------------------------- |
+| **Jenkins**           | Helm Chart            | Deploys Jenkins master with persistent storage                    |
+| **Vault (Raft Mode)** | External Shell Script | Deploys HashiCorp Vault backed by integrated Raft storage         |
+| **Postgres**          | External Shell Script | Installs PostgreSQL and prepares storage credentials for Keycloak |
+| **Keycloak**          | Helm Chart            | Identity & Access Management system connected to Postgres         |
+
 
 ---
 ## 📌 Prerequisites
@@ -58,7 +76,22 @@ cd /tmp/docker-desktop-root/run/desktop/mnt/host/c
 chmod -R 777 k8s-data
 ```
 ---
-### **3️⃣ Installation Script
+## 📁 Directory Structure
+
+    .
+    ├── install-all.sh
+    ├── jenkins/
+    │   ├── jenkins-chart/
+    │   └── (Jenkins deployment files)
+    ├── hashicorp-vault/
+    │   └── install-vault-raft.sh
+    ├── postgres/
+    │   └── install_postgres.sh
+    └── keycloak/
+        ├── keycloak-chart/
+        └── (Keycloak values/config)
+---
+## 📜 Script Summary --- `install-all.sh`
 
 - Powershell Script
 ```bash
@@ -72,4 +105,42 @@ cd kubernetes
 chmod +x install-all.sh
 ./install-all.sh
 ```
+The primary script automates deployment of all components in the correct
+order:
+
+### **1. Jenkins**
+
+-   Checks if a Helm release named `jenkins` exists.
+-   Uninstalls it if found.
+-   Installs Jenkins Helm chart from the `jenkins-chart` directory.
+
+### **2. Vault (Raft Mode)**
+
+-   Runs the `install-vault-raft.sh` script located in the
+    `hashicorp-vault` folder.
+-   Sets up Vault with Raft storage and required Kubernetes resources.
+
+### **3. Postgres**
+
+-   Runs `install_postgres.sh` from the `postgres` folder.
+-   Installs PostgreSQL (typically StatefulSet + PVC).
+
+### **4. Keycloak**
+
+-   Checks if a Helm release named `keycloak` exists.
+-   Uninstalls it if necessary.
+-   Installs Keycloak using the `keycloak-chart` directory.
+
+------------------------------------------------------------------------
+# 🔍 Final Necessary Steps
+
+```
+kubectl get pods
+kubectl logs <pod_name>
+```
+-   Forward the ports of pods
+-   Jenkins - Follow the document for password retrieval - kubernetes/jenkins/README.md 
+-   Hashicorp Vault - Follow the document for password retrieval - kubernetes/hashicorp-vault/README.md
+-   Keycloak - For credentials refer values.yaml file of keycloak chart
+-   Postgres - Follow the document to connect to the DB - kubernetes/postgres/README.md
 ---
