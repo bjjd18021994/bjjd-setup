@@ -20,7 +20,11 @@ spec:
         image: {{ .Values.controller.image }}
         imagePullPolicy: {{ .Values.controller.imagePullPolicy }}
         ports:
-        - containerPort: 8080
+        - name: http
+          containerPort: 9090
+        env:
+        - name: JENKINS_OPTS
+          value: "--httpPort=9090"
         volumeMounts:
         - name: jenkins-home
           mountPath: /var/jenkins_home
