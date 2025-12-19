@@ -139,8 +139,8 @@ kubectl get pods
 kubectl logs <pod_name>
 ```
 -   Forward the ports of pods
--   Jenkins - Follow the document for password retrieval - kubernetes/jenkins/README.md 
--   Hashicorp Vault - Follow the document for password retrieval - kubernetes/hashicorp-vault/README.md
--   Keycloak - For credentials refer values.yaml file of keycloak chart
--   Postgres - Follow the document to connect to the DB - kubernetes/postgres/README.md
+-   Jenkins - Follow the document for password retrieval - bjjd-setup/kubernetes/jenkins/README.md 
+-   Hashicorp Vault - Follow the document for password retrieval - bjjd-setup/kubernetes/hashicorp-vault/README.md
+-   Keycloak - For credentials refer values.yaml file of keycloak chart - bjjd-setup/kubernetes/keycloak/keycloak-chart
+-   Postgres - Follow the document to connect to the DB - bjjd-setup/kubernetes/postgres/README.md
 ---
