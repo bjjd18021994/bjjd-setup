@@ -185,7 +185,7 @@ Each microservice should read connection strings and credentials from environmen
 ```yaml
 env:
   - name: SPRING_DATASOURCE_URL
-    value: jdbc:postgresql://my-postgres-postgresql.default.svc.cluster.local:5432/darshan_db
+    value: jdbc:postgresql://bjjd-postgres-postgresql.default.svc.cluster.local:5432/darshan_db
   - name: SPRING_DATASOURCE_USERNAME
     value: orders
   - name: SPRING_DATASOURCE_PASSWORD
@@ -201,7 +201,7 @@ extraEnv:
   - name: KC_DB
     value: postgres
   - name: KC_DB_URL
-    value: jdbc:postgresql://my-postgres-postgresql.default.svc.cluster.local:5432/keycloak_db
+    value: jdbc:postgresql://bjjd-postgres-postgresql.default.svc.cluster.local:5432/keycloak_db
   - name: KC_DB_USERNAME
     value: keycloak
   - name: KC_DB_PASSWORD
