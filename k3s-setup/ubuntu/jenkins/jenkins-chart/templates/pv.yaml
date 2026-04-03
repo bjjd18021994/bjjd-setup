@@ -8,5 +8,5 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/home/bjjd/k3s-data/jenkins"
+    path: "/home/bjjd/k8s-data/jenkins"
   persistentVolumeReclaimPolicy: Retain
