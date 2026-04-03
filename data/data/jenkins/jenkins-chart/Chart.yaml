@@ -1,0 +1,6 @@
+apiVersion: v2
+name: jenkins
+description: Jenkins with Windows hostPath for Docker Desktop
+type: application
+version: 1.0.0
+appVersion: "2.452.2"

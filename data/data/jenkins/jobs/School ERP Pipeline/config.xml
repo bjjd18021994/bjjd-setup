@@ -1,0 +1,76 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@1571.vb_423c255d6d9">
+  <description>School ERP Pipeline Deployment</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@4256.v991a_f1991c03">
+    <script>pipeline {
+agent any
+
+```
+environment {
+    DOCKER_IMAGE = &quot;sgyanendra1/school-erp-api&quot;
+    IMAGE_TAG = &quot;${BUILD_NUMBER}&quot;
+    HELM_RELEASE = &quot;school-erp-api&quot;
+    NAMESPACE = &quot;default&quot;
+}
+
+stages {
+
+    stage(&apos;Checkout Code&apos;) {
+        steps {
+            git branch: &apos;main&apos;, url: &apos;https://github.com/gyanendrasingh08/school-erp-api.git&apos;
+        }
+    }
+
+    stage(&apos;Build Docker Image&apos;) {
+        steps {
+            script {
+                docker.build(&quot;${DOCKER_IMAGE}:${IMAGE_TAG}&quot;)
+            }
+        }
+    }
+
+    stage(&apos;Push to Docker Hub&apos;) {
+        steps {
+            script {
+                docker.withRegistry(&apos;&apos;, &apos;dockerhub-gyan-creds&apos;) {
+                    docker.image(&quot;${DOCKER_IMAGE}:${IMAGE_TAG}&quot;).push()
+                    docker.image(&quot;${DOCKER_IMAGE}:${IMAGE_TAG}&quot;).push(&quot;latest&quot;)
+                }
+            }
+        }
+    }
+
+    stage(&apos;Deploy to k3s via Helm&apos;) {
+        steps {
+            withCredentials([file(credentialsId: &apos;kubeconfig&apos;, variable: &apos;KUBECONFIG&apos;)]) {
+                sh &quot;&quot;&quot;
+                helm upgrade --install ${HELM_RELEASE} ./helm \
+                  --namespace ${NAMESPACE} \
+                  --create-namespace \
+                  --set image.repository=${DOCKER_IMAGE} \
+                  --set image.tag=${IMAGE_TAG}
+                &quot;&quot;&quot;
+            }
+        }
+    }
+}
+
+post {
+    success {
+        echo &quot;✅ Deployment successful!&quot;
+    }
+    failure {
+        echo &quot;❌ Deployment failed!&quot;
+    }
+}
+```
+
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

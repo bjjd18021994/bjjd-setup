@@ -1,0 +1,32 @@
+server:
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 100
+    runAsGroup: 100
+    fsGroup: 100
+  affinity: ""
+  readinessProbe:
+    enabled: false
+    path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    storageClass: "hostpath"
+  ha:
+    enabled: true
+    replicas: 1
+    raft:
+      enabled: true
+      setNodeId: true
+      config: |
+        ui = true
+
+        listener "tcp" {
+          tls_disable = true
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+
+        storage "raft" {
+          path = "/vault/data"
+        }
