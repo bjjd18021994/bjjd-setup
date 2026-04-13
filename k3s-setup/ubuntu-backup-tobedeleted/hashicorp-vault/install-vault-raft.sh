@@ -33,9 +33,9 @@ echo "=== Starting Rollback (Ignore errors) ==="
 # -------------------------------
 # CHECK IF HELM RELEASE EXISTS
 # -------------------------------
-if helm list -n platform | grep -q "vault"; then
+if helm list -n default | grep -q "vault"; then
     echo "Found release 'vault'. Uninstalling..."
-    helm uninstall vault -n platform
+    helm uninstall vault -n default
 else
     echo "Release 'vault' does not exist. Skipping uninstall."
 fi
@@ -47,7 +47,7 @@ echo "Deleting StorageClass (ignore errors)..."
 kubectl delete sc hostpath --ignore-not-found=true >/dev/null 2>&1
 
 echo "Deleting PVC (ignore errors)..."
-kubectl delete pvc data-vault-0 -n platform --ignore-not-found=true >/dev/null 2>&1
+kubectl delete pvc data-vault-0 --ignore-not-found=true >/dev/null 2>&1
 
 echo "Deleting PV (ignore errors)..."
 kubectl delete pv hashicorp-vault-raft-pv --ignore-not-found=true >/dev/null 2>&1
@@ -76,7 +76,7 @@ echo "Updating Helm repo..."
 helm repo update
 
 echo "Installing Vault with Raft enabled..."
-helm install vault hashicorp/vault -n platform \
+helm install vault hashicorp/vault \
   --values hashicorp-vault-setup-files/hashicorp-vault-raft-values.yaml
 
 

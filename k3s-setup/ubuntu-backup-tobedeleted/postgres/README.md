@@ -32,26 +32,36 @@ This README explains how to install PostgreSQL on a Kubernetes cluster running o
 
 ## 2) Host folder setup (Windows + WSL2/Docker Desktop)
 
-### **1️⃣ Create the target folder in Ubuntu (if not already created)**
+1. Create the Windows folder (PowerShell / CMD):
 
-```sh
-mkdir -p /home/bjjd/k8s-data/data/postgres
+```powershell
+mkdir C:\k8s-data\postgres
 ```
 
-### **2️⃣ Volume Mount location in pv.yaml file**
+2. Confirm the path is visible inside the Docker Desktop WSL distribution:
 
-HostPath to use in PV:
-
+```powershell
+wsl -d docker-desktop
+ls /mnt/c/k8s-data/postgres
 ```
-/home/bjjd/k8s-data/data/postgres
+
+3. Docker Desktop maps the Windows path internally to a host path that Kubernetes can use.
+
+**HostPath to use in PV:**
+```
+/run/desktop/mnt/host/c/k8s-data/postgres
 ```
 
-### **3️⃣ Give access to the k8s folder and its subfolder
-
-HostPath to use in PV:
-
+**Docker Desktop runtime maps it internally to:**
 ```
-chmod -R 777 /home/bjjd/k8s-data/data/postgres
+/tmp/docker-desktop-root/run/desktop/mnt/host/c/k8s-data/postgres
+```
+4. Give access to the k8s folder and its subfolder inside docker-desktop otherwise you may get the error of permission denied: **/mnt/host/c/k8s-data/postgres**
+```
+
+```bash
+cd /tmp/docker-desktop-root/run/desktop/mnt/host/c
+chmod -R 777 k8s-data
 ```
 
 (Adjust permissions to your security requirements — `777` is permissive but effective for local development.)
@@ -59,6 +69,12 @@ chmod -R 777 /home/bjjd/k8s-data/data/postgres
 ---
 
 ## 3) Postgres Installation and DB Init Script
+- Powershell Script
+
+```bash
+cd postgres
+powershell -ExecutionPolicy Bypass -File install_postgres.ps1
+```
 - Shell Script
 
 ```bash

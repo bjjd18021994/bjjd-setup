@@ -14,26 +14,46 @@ You will get:
 
 Before starting, ensure the host directory for Vault data exists and is accessible from Docker Desktop Kubernetes.
 
-### **1️⃣ Create the target folder in Ubuntu (if not already created)**
+### **1️⃣ Create the target folder on Windows (if not already created)**
 
 ```sh
-mkdir -p /home/bjjd/k8s-data/platform/vault
+mkdir C:\k8s-data\vault
 ```
 
-### **2️⃣ Volume Mount location in pv.yaml file**
+Or if using vault directory:
+
+```sh
+mkdir C:\k8s-data\vault
+```
+
+### **2️⃣ Ensure the folder is accessible inside the Kubernetes node**
+
+```sh
+wsl -d docker-desktop
+ls /mnt/c/k8s-data/vault
+```
+
+### **3️⃣ Volume Mount location in pv.yaml file**
 
 HostPath to use in PV:
 
 ```
-/home/bjjd/k8s-data/platform/vault
+/run/desktop/mnt/host/c/k8s-data/vault
 ```
 
-### **3️⃣ Give access to the k8s folder and its subfolder
+Docker Desktop runtime maps it internally to:
+
+```
+/tmp/docker-desktop-root/run/desktop/mnt/host/c/k8s-data/vault
+```
+### **3️⃣ Give access to the k8s folder and its subfolder inside docker-desktop otherwise you may get the error of permission denied on vault.db**
 
 HostPath to use in PV:
 
 ```
-chmod -R 777 /home/bjjd/k8s-data/platform/vault
+PS C:\Users\Rajiv Kumar Bansal>  wsl -d docker-desktop
+cd /tmp/docker-desktop-root/run/desktop/mnt/host/c
+chmod -R 777 k8s-data
 ```
 ---
 📂 Repository Structure

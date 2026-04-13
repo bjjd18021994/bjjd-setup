@@ -9,5 +9,5 @@ spec:
     - ReadWriteOnce
   storageClassName: hostpath
   hostPath:
-    path: /home/bjjd/k8s-data/platform/vault
+    path: /home/bjjd/k8s-data/vault
   persistentVolumeReclaimPolicy: Retain

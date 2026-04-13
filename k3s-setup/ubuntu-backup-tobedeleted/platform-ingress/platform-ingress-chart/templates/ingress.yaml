@@ -1,0 +1,61 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-platform-ingress
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+
+    # ✅ cert-manager integration
+    cert-manager.io/cluster-issuer: {{ .Values.tls.clusterIssuer }}
+
+    # ✅ Attach middlewares
+    traefik.ingress.kubernetes.io/router.middlewares: >
+      {{ .Release.Namespace }}-redirect@kubernetescrd,
+      {{ .Release.Namespace }}-security-headers@kubernetescrd,
+      {{- if .Values.middlewares.auth.enabled }}
+      {{ .Release.Namespace }}-auth@kubernetescrd,
+      {{- end }}
+      {{ .Release.Namespace }}-ratelimit@kubernetescrd
+
+spec:
+  ingressClassName: traefik
+
+  tls:
+    - hosts:
+        - "*.{{ .Values.domain }}"
+      secretName: {{ .Values.tls.secretName }}
+
+  rules:
+    - host: {{ .Values.services.vault.host }}.{{ .Values.domain }}
+      http:
+        paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: {{ .Values.services.vault.name }}
+                  port:
+                    number: {{ .Values.services.vault.port }}
+
+    - host: {{ .Values.services.jenkins.host }}.{{ .Values.domain }}
+      http:
+        paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: {{ .Values.services.jenkins.name }}
+                  port:
+                    number: {{ .Values.services.jenkins.port }}
+
+    - host: {{ .Values.services.keycloak.host }}.{{ .Values.domain }}
+      http:
+        paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: {{ .Values.services.keycloak.name }}
+                  port:
+                    number: {{ .Values.services.keycloak.port }}

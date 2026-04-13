@@ -13,27 +13,45 @@ Before deploying Jenkins, ensure the following requirements are met:
 
 ## 🚀 Deployment Steps
 
-### **1️⃣ Create the target folder in Ubuntu (if not already created)**
+### 1. Create the target directory on Windows
 
-```sh
-mkdir -p /home/bjjd/k8s-data/platform/jenkins
+```powershell
+mkdir C:\k8s-data\jenkins
 ```
 
-### **2️⃣ Volume Mount location in pv.yaml file**
+### 2. Verify that the directory is accessible inside the node
 
-HostPath to use in PV:
-
+```bash
+wsl -d docker-desktop
+ls /mnt/c/k8s-data/jenkins
 ```
-/home/bjjd/k8s-data/platform/jenkins
+
+---
+
+## 3. Volume Mount Inside `pv.yaml`
+
+Use the following mount path inside the Kubernetes PersistentVolume configuration:
+
+* Defined mount path in `pv.yaml`:
+
+  ```
+  /run/desktop/mnt/host/c/k8s-data/jenkins
+  ```
+
+* At runtime, Kubernetes resolves this path to:
+
+  ```
+  /tmp/docker-desktop-root/run/desktop/mnt/host/c/k8s-data/jenkins
+  ```
+* Give access to the k8s folder and its subfolder inside docker-desktop otherwise you may get the error of permission denied: **/mnt/host/c/k8s-data/jenkins**
+
+```bash
+cd /tmp/docker-desktop-root/run/desktop/mnt/host/c
+chmod -R 777 k8s-data
 ```
 
-### **3️⃣ Give access to the k8s folder and its subfolder
+(Adjust permissions to your security requirements — `777` is permissive but effective for local development.)
 
-HostPath to use in PV:
-
-```
-chmod -R 777 /home/bjjd/k8s-data/platform/jenkins
-```
 ---
 
 ## 4. Jenkins Helm Chart Structure
@@ -64,7 +82,7 @@ jenkins-chart/
 Run the following command from the directory containing the chart:
 
 ```powershell
-C:\> helm install jenkins .\jenkins-chart -n platform
+C:\> helm install jenkins .\jenkins-chart
 ```
 
 ---
@@ -92,13 +110,13 @@ http://localhost:8080/
 Option A — From Kubernetes Secret:
 
 ```bash
-kubectl get secret jenkins  -n platform -o jsonpath="{.data.jenkins-admin-password}" | base64 -d
+kubectl get secret jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 -d
 ```
 
 Option B — From inside the Jenkins pod:
 
 ```bash
-kubectl exec -it -n platform <jenkins-pod-name> -- cat /var/jenkins_home/secrets/initialAdminPassword
+kubectl exec -it -n jenkins <jenkins-pod-name> -- cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 
 ---

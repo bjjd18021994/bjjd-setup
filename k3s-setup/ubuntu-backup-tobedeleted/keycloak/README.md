@@ -163,13 +163,13 @@ If you want, I can provide an init Job for this as well.
 Run:
 
 ```sh
-helm install keycloak ./keycloak -n platform
+helm install keycloak ./keycloak
 ```
 
 or upgrade:
 
 ```sh
-helm upgrade --install keycloak ./keycloak -n platform
+helm upgrade --install keycloak ./keycloak
 ```
 
 ---
