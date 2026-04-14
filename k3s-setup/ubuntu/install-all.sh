@@ -46,13 +46,13 @@ sleep 10
 
 # Install Jenkins
 echo "Installing Jenkins chart..."
-helm install jenkins ./jenkins-chart/
+helm install jenkins ./jenkins-chart/ -n platform
 
 cd ..
 
 
 # ------------------------------------------------------------------------------
-# 4. Install HashiCorp Vault (Raft Mode)
+# 4. Install Hashicorp Vault (Raft Mode)
 # ------------------------------------------------------------------------------
 
 echo "===== Starting Vault (Raft) Installation ====="
@@ -63,7 +63,6 @@ bash install-vault-raft.sh
 
 cd ..
 
-
 # ------------------------------------------------------------------------------
 # 5. Install Postgres
 # ------------------------------------------------------------------------------
@@ -72,7 +71,7 @@ echo "===== Starting Postgres Installation ====="
 cd postgres
 
 # Execute Postgres installation script
-bash install_postgres.sh
+bash install-postgres.sh
 
 cd ..
 
@@ -97,7 +96,7 @@ sleep 10
 
 # Install Keycloak
 echo "Installing Keycloak chart..."
-helm install keycloak ./keycloak-chart/
+helm install keycloak ./keycloak-chart/ -n platform
 
 cd ..
 

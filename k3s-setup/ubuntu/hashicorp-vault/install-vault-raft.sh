@@ -60,7 +60,7 @@ echo "=== Rollback complete. Starting fresh install ==="
 # APPLY STORAGECLASS + PV
 # -------------------------------
 echo "Applying StorageClass..."
-kubectl apply -f hashicorp-vault-setup-files/hostpath-storageclass.yaml
+kubectl apply -f hashicorp-vault-setup-files/hashicorp-storageclass.yaml
 
 echo "Applying PersistentVolume..."
 kubectl apply -f hashicorp-vault-setup-files/hashicorp-vault-raft-pv.yaml
