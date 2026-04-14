@@ -54,7 +54,7 @@ echo "===== Uninstalling Postgres ====="
 cd postgres
 
 # Execute Postgres installation script
-bash delete_postgres.sh
+bash delete-postgres.sh
 
 cd ..
 
