@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: postgres-init-databases
+  namespace: {{ .Release.Namespace }}
 spec:
   backoffLimit: 4
   template:
