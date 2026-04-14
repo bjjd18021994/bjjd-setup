@@ -85,7 +85,7 @@ helm install vault hashicorp/vault -n platform \
 # -------------------------------
 echo "============================="
 echo "Vault installation triggered..."
-echo "Pods will start in the default namespace."
+echo "Pods will start in the platform namespace."
 echo ""
 echo "Check pod status:"
 echo "   kubectl get pods"
