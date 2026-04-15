@@ -4,4 +4,4 @@ metadata:
   name: postgres-config
   namespace: data
 data:
-  POSTGRES_HOST: "bjjd-postgres-postgresql.default.svc.cluster.local"
+  POSTGRES_HOST: "bjjd-postgres-postgresql.data.svc.cluster.local"

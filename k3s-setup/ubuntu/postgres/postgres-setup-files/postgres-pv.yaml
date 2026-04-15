@@ -11,4 +11,4 @@ spec:
     - ReadWriteOnce
   storageClassName: manual
   hostPath:
-    path: /home/bjjd/k8s-data/postgres   # Windows folder mapped via WSL
+    path: /home/bjjd/k8s-data/data/postgres   # Windows folder mapped via WSL
