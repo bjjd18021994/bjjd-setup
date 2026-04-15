@@ -68,7 +68,7 @@ mkdir -p /home/bjjd/k8s-data/{platform/{vault,keycloak,ingress},data/postgres,bj
 ### **2️⃣ Ensure the folder is accessible inside the Kubernetes node**
 
 ```sh
-chmod 777 -rf /home/bjjd/k8s-data
+sudo chmod -R 777 /home/bjjd/k8s-data
 ```
 
 ### **3️⃣ Volume Mount location in pv.yaml file**
