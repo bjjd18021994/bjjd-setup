@@ -8,6 +8,8 @@ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/do
 
 echo "Waiting for cert-manager to be ready..."
 
+sleep 39
+
 kubectl wait --for=condition=Available deployment cert-manager -n cert-manager --timeout=180s
 kubectl wait --for=condition=Available deployment cert-manager-webhook -n cert-manager --timeout=180s
 kubectl wait --for=condition=Available deployment cert-manager-cainjector -n cert-manager --timeout=180s

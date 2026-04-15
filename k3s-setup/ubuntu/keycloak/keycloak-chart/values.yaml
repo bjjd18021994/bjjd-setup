@@ -18,7 +18,7 @@ resources:
     memory: 1700Mi
 
 postgres:
-  host: "bjjd-postgres-postgresql.default.svc.cluster.local"
+  host: "bjjd-postgres-postgresql.data.svc.cluster.local"
   port: 5432
   dbName: "keycloak_db"
   username: "keycloak"
