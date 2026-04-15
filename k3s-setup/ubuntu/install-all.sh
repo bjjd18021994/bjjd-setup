@@ -17,7 +17,7 @@ echo
 # ------------------------------------------------------------------------------
 # 1. Create the folders to store the k8s data
 # ------------------------------------------------------------------------------
-mkdir -p /home/bjjd/k8s-data/{platform/{vault,keycloak,ingress},data/postgres,bjjd/app,scripts}
+mkdir -p /home/bjjd/k8s-data/{platform/{vault,keycloak,ingress},data/postgres}
 # To do manuall
 # chmod -R 777 /home/bjjd/k8s-data
 # ------------------------------------------------------------------------------
