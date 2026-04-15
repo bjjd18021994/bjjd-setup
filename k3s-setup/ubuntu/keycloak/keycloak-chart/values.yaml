@@ -32,7 +32,7 @@ persistence:
   enabled: true
   accessMode: ReadWriteOnce
   size: 5Gi
-  storageClass: "hostpath"
+  storageClass: "local-path"
  # existingClaim: ""
  # hostPath: /run/desktop/mnt/host/c/k8s-data/keycloak
 

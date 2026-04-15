@@ -43,9 +43,6 @@ fi
 # -------------------------------
 # SAFE CLEANUP (IGNORE ERRORS)
 # -------------------------------
-echo "Deleting StorageClass (ignore errors)..."
-kubectl delete sc hostpath --ignore-not-found=true >/dev/null 2>&1
-
 echo "Deleting PVC (ignore errors)..."
 kubectl delete pvc data-vault-0 -n platform --ignore-not-found=true >/dev/null 2>&1
 
@@ -57,11 +54,8 @@ echo "=== Rollback complete. Starting fresh install ==="
 
 
 # -------------------------------
-# APPLY STORAGECLASS + PV
+# APPLY PV
 # -------------------------------
-echo "Applying StorageClass..."
-kubectl apply -f hashicorp-vault-setup-files/hashicorp-storageclass.yaml
-
 echo "Applying PersistentVolume..."
 kubectl apply -f hashicorp-vault-setup-files/hashicorp-vault-raft-pv.yaml
 

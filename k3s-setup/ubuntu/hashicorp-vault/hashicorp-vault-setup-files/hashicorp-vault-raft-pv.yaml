@@ -7,7 +7,7 @@ spec:
     storage: 10Gi
   accessModes:
     - ReadWriteOnce
-  storageClassName: hostpath
+  storageClassName: local-path
   hostPath:
     path: /home/bjjd/k8s-data/platform/vault
   persistentVolumeReclaimPolicy: Retain

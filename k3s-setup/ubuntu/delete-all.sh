@@ -93,8 +93,6 @@ else
     echo "No platform-ingress release found. Skipping uninstall."
 fi
 
-kubectl delete -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
-
 # ------------------------------------------------------------------------------
 # Completed
 # ------------------------------------------------------------------------------

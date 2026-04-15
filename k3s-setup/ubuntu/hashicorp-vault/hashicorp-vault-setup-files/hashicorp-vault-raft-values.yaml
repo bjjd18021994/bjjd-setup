@@ -11,7 +11,7 @@ server:
   dataStorage:
     enabled: true
     size: 10Gi
-    storageClass: "hostpath"
+    storageClass: "local-path"
   ha:
     enabled: true
     replicas: 1

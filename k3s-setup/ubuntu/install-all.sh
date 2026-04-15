@@ -27,7 +27,12 @@ kubectl create namespace data || true
 kubectl create namespace bjjd || true
 
 # ------------------------------------------------------------------------------
-# 3. Install Jenkins
+# 3. Create the local-path storage class
+# ------------------------------------------------------------------------------
+kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
+
+# ------------------------------------------------------------------------------
+# 4. Install Jenkins
 # ------------------------------------------------------------------------------
 
 echo "===== Starting Jenkins Installation ====="
