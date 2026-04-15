@@ -18,7 +18,7 @@ echo
 # 1. Create the folders to store the k8s data
 # ------------------------------------------------------------------------------
 mkdir -p /home/bjjd/k8s-data/{platform/{vault,keycloak,ingress},data/postgres,bjjd/app,scripts}
-
+chmod -R 777 /home/bjjd/k8s-data
 # ------------------------------------------------------------------------------
 # 2. Create the namespaces if not exists
 # ------------------------------------------------------------------------------
@@ -98,7 +98,7 @@ fi
 
 # Allow cleanup time
 sleep 10
-
+kubectl delete pvc keycloak-data-keycloak-0 -n platform --ignore-not-found=true >/dev/null 2>&1
 # Install Keycloak
 echo "Installing Keycloak chart..."
 helm install keycloak ./keycloak-chart/ -n platform

@@ -76,7 +76,7 @@ fi
 
 # Allow cleanup time
 sleep 10
-
+kubectl delete pvc keycloak-data-keycloak-0 -n platform --ignore-not-found=true >/dev/null 2>&1
 cd ..
 
 # ------------------------------------------------------------------------------
