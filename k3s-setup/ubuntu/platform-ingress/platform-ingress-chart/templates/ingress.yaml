@@ -8,9 +8,7 @@ metadata:
 
     # ✅ cert-manager integration
     cert-manager.io/cluster-issuer: {{ .Values.tls.clusterIssuer }}
-
-    # ❌ REMOVE THIS (if using cert-manager)
-    # traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
+    traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
 
     # ✅ Attach middlewares
     traefik.ingress.kubernetes.io/router.middlewares: >
@@ -26,7 +24,9 @@ spec:
 
   tls:
     - hosts:
-        - "*.{{ .Values.domain }}"
+        - keycloak.bhavyajagjananidarbar.org
+        - vault.bhavyajagjananidarbar.org
+        - jenkins.bhavyajagjananidarbar.org
       secretName: {{ .Values.tls.secretName }}
 
   rules:

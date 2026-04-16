@@ -28,7 +28,7 @@ services:
 
 middlewares:
   auth:
-    enabled: true
+    enabled: false
     secretName: basic-auth-secret
 
   rateLimit:
