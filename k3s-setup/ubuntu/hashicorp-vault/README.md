@@ -152,13 +152,13 @@ The operator init command generates a root key, breaks it into key shares, and s
 Run:
 
 ```sh
-kubectl exec vault-0 -n vault -- vault operator init -key-shares=1 -key-threshold=1 -format=json > cluster-keys.json
+kubectl exec vault-0 -n platform -- vault operator init -key-shares=1 -key-threshold=1 -format=json > cluster-keys.json
 ```
 
 Or:
 
 ```sh
-kubectl exec vault-0 -- vault operator init -key-shares=1 -key-threshold=1 -format=json > cluster-keys.json
+kubectl exec vault-0 -n platform -- vault operator init -key-shares=1 -key-threshold=1 -format=json > cluster-keys.json
 ```
 
 ### **Save the output into cluster-keys.json**
@@ -176,7 +176,7 @@ VAULT_UNSEAL_KEY=$(jq -r ".unseal_keys_b64[]" cluster-keys.json)
 ### **Unseal vault-0**
 
 ```sh
-kubectl exec vault-0 -n vault -- vault operator unseal $VAULT_UNSEAL_KEY
+kubectl exec vault-0 -n platform -- vault operator unseal $VAULT_UNSEAL_KEY
 ```
 
 ### **Verify vault-0 is Ready**
@@ -190,8 +190,8 @@ kubectl get pods -n vault
 ### **Join vault-1 and vault-2 to the Raft cluster**
 
 ```sh
-kubectl exec -ti vault-1 -n vault -- vault operator raft join http://vault-0.vault-internal:8200
-kubectl exec -ti vault-2 -n vault -- vault operator raft join http://vault-0.vault-internal:8200
+kubectl exec -ti vault-1 -n platform -- vault operator raft join http://vault-0.vault-internal:8200
+kubectl exec -ti vault-2 -n platform -- vault operator raft join http://vault-0.vault-internal:8200
 ```
 
 ### **Unseal vault-1 and vault-2**

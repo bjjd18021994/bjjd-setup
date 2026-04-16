@@ -187,3 +187,12 @@ kubectl logs <pod_name>
 -   Postgres - Follow the document and see the steps(after installation) to connect to the DB - bjjd-setup/kubernetes/postgres/README.md
 -   Ingress Platform - - Follow the document and see the steps(after installation) to access the urls of jenkins, vault and keycloak via ingress - bjjd-setup/k3s-setup/ubuntu/platform-ingress/README.md
 ---
+
+## 🌍 Access URLs
+After deployment, services will be available at:
+
+Example:
+
+* https://vault.bhavyajagjananidarbar.org
+* https://jenkins.bhavyajagjananidarbar.org
+* https://keycloak.bhavyajagjananidarbar.org

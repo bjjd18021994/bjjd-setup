@@ -145,10 +145,10 @@ letsencrypt-prod
 
 ## 🔑 Basic Authentication Setup
 
-Create a basic auth secret:
+Create a basic auth secret and 999 is codeword:
 
 ```bash
-htpasswd -nb admin admin@379 | base64
+htpasswd -nb admin admin@999 | base64
 ```
 
 Apply secret:
