@@ -62,7 +62,7 @@ bjjd/
 ```
 - Script to create the folders
 ```bash
-mkdir -p /home/bjjd/k8s-data/{platform/{vault,keycloak,ingress},data/postgres,bjjd/app,scripts}
+mkdir -p /home/bjjd/k8s-data/{platform/{vault,keycloak,ingress},data/postgres}
 ```
 
 ### **2️⃣ Ensure the folder is accessible inside the Kubernetes node**
