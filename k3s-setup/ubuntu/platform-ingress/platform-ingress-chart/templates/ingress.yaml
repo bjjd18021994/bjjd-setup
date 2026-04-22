@@ -11,13 +11,13 @@ metadata:
     traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
 
     # ✅ Attach middlewares
-    traefik.ingress.kubernetes.io/router.middlewares: >
-      {{ .Release.Namespace }}-redirect@kubernetescrd,
-      {{ .Release.Namespace }}-security-headers@kubernetescrd,
-      {{- if .Values.middlewares.auth.enabled }}
-      {{ .Release.Namespace }}-auth@kubernetescrd,
-      {{- end }}
-      {{ .Release.Namespace }}-ratelimit@kubernetescrd
+  #  traefik.ingress.kubernetes.io/router.middlewares: >
+  #    {{ .Release.Namespace }}-redirect@kubernetescrd,
+  #    {{ .Release.Namespace }}-security-headers@kubernetescrd,
+  #    {{- if .Values.middlewares.auth.enabled }}
+  #    {{ .Release.Namespace }}-auth@kubernetescrd,
+  #    {{- end }}
+  #    {{ .Release.Namespace }}-ratelimit@kubernetescrd
 
 spec:
   ingressClassName: traefik
