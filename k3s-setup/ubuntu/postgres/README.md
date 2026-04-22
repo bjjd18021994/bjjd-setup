@@ -169,7 +169,7 @@ Each microservice should read connection strings and credentials from environmen
 ```yaml
 env:
   - name: SPRING_DATASOURCE_URL
-    value: jdbc:postgresql://bjjd-postgres-postgresql.default.svc.cluster.local:5432/darshan_db
+    value: jdbc:postgresql://bjjd-postgres-postgresql.data.svc.cluster.local:5432/darshan_db
   - name: SPRING_DATASOURCE_USERNAME
     value: orders
   - name: SPRING_DATASOURCE_PASSWORD
@@ -185,7 +185,7 @@ extraEnv:
   - name: KC_DB
     value: postgres
   - name: KC_DB_URL
-    value: jdbc:postgresql://bjjd-postgres-postgresql.default.svc.cluster.local:5432/keycloak_db
+    value: jdbc:postgresql://bjjd-postgres-postgresql.data.svc.cluster.local:5432/keycloak_db
   - name: KC_DB_USERNAME
     value: keycloak
   - name: KC_DB_PASSWORD
@@ -199,28 +199,28 @@ extraEnv:
 
 **accounts_db**
 ```
-jdbc:postgresql://bjjd-postgres-postgresql.default.svc.cluster.local:5432/accounts_db
+jdbc:postgresql://bjjd-postgres-postgresql.data.svc.cluster.local:5432/accounts_db
 username: accounts
 password: accounts@9999
 ```
 
 **persons_db**
 ```
-jdbc:postgresql://bjjd-postgres-postgresql.default.svc.cluster.local:5432/persons_db
+jdbc:postgresql://bjjd-postgres-postgresql.data.svc.cluster.local:5432/persons_db
 username: persons
 password: persons@9999
 ```
 
 **projects_db**
 ```
-jdbc:postgresql://bjjd-postgres-postgresql.default.svc.cluster.local:5432/projects_db
+jdbc:postgresql://bjjd-postgres-postgresql.data.svc.cluster.local:5432/projects_db
 username: projects
 password: projects@9999
 ```
 
 **users_db**
 ```
-jdbc:postgresql://bjjd-postgres-postgresql.default.svc.cluster.local:5432/users_db
+jdbc:postgresql://bjjd-postgres-postgresql.data.svc.cluster.local:5432/users_db
 username: users
 password: users@9999
 ```
@@ -304,7 +304,7 @@ If a microservice fails to connect, verify:
 - Password matches Kubernetes Secret
 - Service URL matches actual cluster DNS:
 ```
-bjjd-postgres-postgresql.default.svc.cluster.local:5432
+bjjd-postgres-postgresql.data.svc.cluster.local:5432
 ```
 
 ---
