@@ -3,6 +3,23 @@ controller:
   imagePullPolicy: Always
   adminUser: admin
   adminPassword: admin@9379
+  installPlugins:
+    - kubernetes:4306.vc91e951ea_eb_d
+    - workflow-aggregator:596.v8c21c963d92d
+    - git:5.2.1
+    - docker-workflow:563.vd5d2e5c4007f
+    - credentials-binding:642.v737c34dea_6c2
+  containerSecurityContext:
+    runAsUser: 0   # required for docker socket
+
+  volumes:
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock
+
+  volumeMounts:
+    - name: docker-sock
+      mountPath: /var/run/docker.sock
 
 persistence:
   enabled: true
@@ -11,3 +28,5 @@ persistence:
 service:
   type: ClusterIP
   port: 9090
+
+
