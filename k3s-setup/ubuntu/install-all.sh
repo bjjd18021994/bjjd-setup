@@ -52,7 +52,7 @@ sleep 10
 
 # Install Jenkins
 echo "Installing Jenkins chart..."
-helm install jenkins ./jenkins-chart/ -n platform
+helm upgrade install jenkins ./jenkins-chart/ -n platform
 
 cd ..
 
