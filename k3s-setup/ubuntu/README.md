@@ -108,7 +108,7 @@ chmod -R 777 k8s-data
         └── (Keycloak values/config)
     └── platform-ingress/
         ├── platform-ingress-chart/
-        └── install-ingress-platform.sh
+        └── install-ingress-platform.sh 
 ---
 ## 📜 Script Summary --- `install-all.sh`
 
